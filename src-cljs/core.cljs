@@ -2,26 +2,12 @@
   (:require [clojure.browser.repl :as repl]
             [c2.scale :as scale]
             [c2.event :as event]
-            [c2.core :as c2]
-            [c2.util :refer [bind!]]))
-
+            [c2.util :refer [bind! unify]]))
 
 (defn log [str]
   (.log js/console (pr-str str)))
 
-(defn handleForm [event]
-  (log event)
-  (.preventDefault event)
-  (log "Called handleForm()")
-  (let [name (.getElementById js/document "name")]
-    (if (> (count (.-value name)) 0)
-      (greet (.-value name)))))
-
-(defn greet [n]
-  (.log js/console (pr-str "Called greet()"))
-  (js/alert (str "Hello " n)))
-
-(defn ourdata []
+(def our-data
   {
     "7/2/13" 52
     "7/3/13" 63
@@ -54,26 +40,24 @@
     "7/30/13" 236
     "7/31/13" 96
     "8/1/13" 102
-   }
-)
+ })
 
-(defn draw-histogram []
+
+(defn draw-histogram [data]
   (let [width 500
         bar-height 20
-        data (ourdata)
         s (scale/linear :domain [0 (apply max (vals data))]
                         :range [0 width])]
-    (c2.util/bind!
+    (bind!
       "#bars"
       [:div#bars
-       (c2/unify data
+       (unify data
           (fn [[label val]]
             (log (+ "Val " (s val)))
             [:div {:style {:height (+ bar-height "px")
                            :width (+ (s val) "px")
                            :background-color "gray"}}
-             [:span {:style {:color "white"}} label]]))])
-))
+             [:span {:style {:color "white"}} label]]))])))
 
 (defn point-to-draw [point]
   (str "L " (clojure.string/join " " point)))
@@ -87,40 +71,33 @@
 (defn data-to-paths [points xint]
   (clojure.string/join "\n" (map point-to-draw (points-with-index points xint))))
 
-(defn draw-graph []
-  (let [data (ourdata)
-        width 500
+(defn draw-graph [data]
+  (let [width 500
         height 500
         x-interval (/ width (count data))
         s (scale/linear :domain [0 (apply max (vals data))]
                         :range [0 height])
         new-data (str
                    (point-to-start (vector 0 (last (first data))))
-                   (data-to-paths data x-interval))
-        ]
-    (c2.util/bind!
+                   (data-to-paths data x-interval))]
+
+    (bind!
       "#graph"
       [:div#graph
         [:svg.graph {:xmlns "http://www.w3.org/2000/svg" :width width :height height}
           [:path {:d new-data
                   :stroke "red"
                   :stroke-width "2"
-                  :fill "none"
-                  }]
-        ]
-    ]
-    )
-  )
-)
+                  :fill "none"}]]])))
+
 
 (defn init []
   ;; verify that js/document exists and that it has a getElementById
   ;; property
   (if (and js/document (.-getElementById js/document))
     (do
-     (draw-histogram)
-     (draw-graph))))
+     (draw-histogram our-data)
+     (draw-graph our-data))))
 
 (repl/connect "http://localhost:9000/repl")
 (set! (.-onload js/window) init)
-
