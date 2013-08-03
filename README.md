@@ -1,13 +1,13 @@
 # cljs_dashboard
 
-A Clojure library designed to ... well, that part is up to you.
+A ClojureScript web app that provides company data, etc.
 
 ## Usage
 
-FIXME
+Not ready for prime time yet, chummer.
 
 ## License
 
-Copyright © 2013 FIXME
+Copyright © 2013 Matt Gauger
 
 Distributed under the Eclipse Public License, the same as Clojure.
