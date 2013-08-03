@@ -5,8 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [compojure "1.0.4"]
-                 [hiccup "1.0.0"]
-                 [com.keminglabs/c2 "0.2.3"]]
+                 [hiccup "1.0.0"]]
   :plugins [[lein-cljsbuild "0.3.2"]
             [lein-ring "0.7.0"]]
   :cljsbuild {

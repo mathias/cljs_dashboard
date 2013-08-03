@@ -1,8 +1,5 @@
 (ns hello
-  (:require [clojure.browser.repl :as repl]
-            [c2.scale :as scale]
-            [c2.event :as event]
-            [c2.util :refer [bind! unify]]))
+  (:require [clojure.browser.repl :as repl]))
 
 (defn log [str]
   (.log js/console (pr-str str)))
@@ -43,61 +40,11 @@
  })
 
 
-(defn draw-histogram [data]
-  (let [width 500
-        bar-height 20
-        s (scale/linear :domain [0 (apply max (vals data))]
-                        :range [0 width])]
-    (bind!
-      "#bars"
-      [:div#bars
-       (unify data
-          (fn [[label val]]
-            (log (+ "Val " (s val)))
-            [:div {:style {:height (+ bar-height "px")
-                           :width (+ (s val) "px")
-                           :background-color "gray"}}
-             [:span {:style {:color "white"}} label]]))])))
-
-(defn point-to-draw [point]
-  (str "L " (clojure.string/join " " point)))
-
-(defn point-to-start [point]
-  (str "M " (clojure.string/join " " point)))
-
-(defn points-with-index [points xint]
-  (map-indexed #(vector (* xint %1) %2) (vals points)))
-
-(defn data-to-paths [points xint]
-  (clojure.string/join "\n" (map point-to-draw (points-with-index points xint))))
-
-(defn draw-graph [data]
-  (let [width 500
-        height 500
-        x-interval (/ width (count data))
-        s (scale/linear :domain [0 (apply max (vals data))]
-                        :range [0 height])
-        new-data (str
-                   (point-to-start (vector 0 (last (first data))))
-                   (data-to-paths data x-interval))]
-
-    (bind!
-      "#graph"
-      [:div#graph
-        [:svg.graph {:xmlns "http://www.w3.org/2000/svg" :width width :height height}
-          [:path {:d new-data
-                  :stroke "red"
-                  :stroke-width "2"
-                  :fill "none"}]]])))
-
-
 (defn init []
   ;; verify that js/document exists and that it has a getElementById
   ;; property
   (if (and js/document (.-getElementById js/document))
-    (do
-     (draw-histogram our-data)
-     (draw-graph our-data))))
+     (.appendChild js/document.body (.createElement js/document "p"))))
 
 (repl/connect "http://localhost:9000/repl")
 (set! (.-onload js/window) init)
