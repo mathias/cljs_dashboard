@@ -1,15 +1,18 @@
 (ns cljs-dashboard.views
   (:require
     [hiccup
-      [page :refer [html5]]
-      [page :refer [include-js]]]))
+     [page :refer [html5 include-js include-css]]]))
+
+(def title "Dashboard")
 
 (defn index-page []
   (html5
     [:head
-      [:title "Hello World"]]
+      [:title title]
+     (include-css "css/bootstrap.min.css")
+     (include-css "css/statusboard.css")]
     [:body
-      [:h1 "Hello World"]
-      [:div {:id "bars" :class "example"}]
-      [:div {:id "graph" :class "example"}]
-      (include-js "/js/main.js")]))
+     [:div {:class "container-fluid"}
+      [:h1 title]
+      [:div {:id "widgets-holder" :class "row-fluid"}]
+      (include-js "/js/main.js")]]))

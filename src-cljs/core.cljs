@@ -44,6 +44,7 @@
   ;; verify that js/document exists and that it has a getElementById
   ;; property
   (if (and js/document (.-getElementById js/document))
+    (log our-data)
      (.appendChild js/document.body (.createElement js/document "p"))))
 
 (repl/connect "http://localhost:9000/repl")
