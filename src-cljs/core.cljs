@@ -45,7 +45,7 @@
   ;; property
   (if (and js/document (.-getElementById js/document))
     (log our-data)
-     (.appendChild js/document.body (.createElement js/document "p"))))
+    (.appendChild js/document.body (.createElement js/document "p"))))
 
 (repl/connect "http://localhost:9000/repl")
 (set! (.-onload js/window) init)
